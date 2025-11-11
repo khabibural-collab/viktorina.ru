@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игра "Найди пару" - Конструктор Ракета-Пуля</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #FFE5F1, #E5F3FF);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Плавающие элементы */
+        .floating-element {
+            position: absolute;
+            font-size: 2rem;
+            z-index: 0;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 20%;
+            right: 10%;
+            animation-delay: 1s;
+        }
+
+        .floating-element:nth-child(3) {
+            bottom: 10%;
+            left: 20%;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-family: 'Arial Rounded MT Bold', sans-serif;
+            font-size: 2.5rem;
+            color: #2C3E50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #2C3E50;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #2C3E50;
+            font-size: 1.1rem;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto 30px;
+        }
+
+        .card {
+            width: 80px;
+            height: 80px;
+            background-color: #FFFACD;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card.flipped, .card.matched {
+            background-color: white;
+        }
+
+        .card.front {
+            background-color: #FFFACD;
+            font-size: 2rem;
+        }
+
+        .card.back {
+            background-color: white;
+            display: none;
+            font-size: 2rem;
+        }
+
+        .card.flipped .front,
+        .card.flipped .back {
+            display: none;
+        }
+
+        .card.flipped .front {
+            display: none;
+        }
+
+        .card.flipped .back {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #DDA0DD;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Arial Rounded MT Bold', sans-serif;
+            margin: 0 10px;
+        }
+
+        button:hover {
+            background-color: #C8A2C8;
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .congrats {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .congrats-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            animation: popIn 0.5s ease-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .congrats h2 {
+            font-family: 'Arial Rounded MT Bold', sans-serif;
+            font-size: 2rem;
+            color: #2C3E50;
+            margin-bottom: 20px;
+        }
+
+        .congrats p {
+            font-size: 1.2rem;
+            color: #2C3E50;
+            margin-bottom: 20px;
+        }
+
+        .leaderboard {
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .leaderboard h3 {
+            font-family: 'Arial Rounded MT Bold', sans-serif;
+            font-size: 1.5rem;
+            color: #2C3E50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+        }
+
+        .leaderboard-list li {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #FFFACD;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            color: #2C3E50;
+        }
+
+        .player-input {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .player-input input {
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid #DDD;
+            border-radius: 8px;
+            margin-right: 10px;
+            width: 200px;
+        }
+
+        .trophy {
+            color: gold;
+            font-size: 1.5rem;
+            margin-right: 5px;
+        }
+
+        .top-three {
+            background-color: #FFD70033;
+            border: 2px solid gold;
+        }
+
+        .start-screen {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .start-screen h2 {
+            font-family: 'Arial Rounded MT Bold', sans-serif;
+            font-size: 2rem;
+            color: #2C3E50;
+            margin-bottom: 20px;
+        }
+
+        .start-screen p {
+            font-size: 1.1rem;
+            color: #2C3E50;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 500px) {
+            .game-board {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 200px;
+                gap: 10px;
+            }
+            
+            .card {
+                width: 80px;
+                height: 80px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-element">☁️</div>
+    <div class="floating-element">🌟</div>
+    <div class="floating-element">💖</div>
+    
+    <div class="container">
+        <header>
+            <h1>🎮 Найди пару!</h1>
+            <p class="subtitle">Найди все пары фигурок из строительных блоков!</p>
+        </header>
+        
+        <div class="start-screen" id="startScreen">
+            <h2>Добро пожаловать в игру!</h2>
+            <p>Найди все пары одинаковых фигурок. Чем быстрее найдешь все пары, тем выше будет твой результат в рейтинге!</p>
+            <button id="startBtn">Начать игру</button>
+        </div>
+        
+        <div class="stats hidden" id="statsPanel">
+            <div>Время: <span id="timer">0.0</span> сек.</div>
+            <div>Пар найдено: <span id="pairs">0</span>/5</div>
+        </div>
+        
+        <div class="game-board hidden" id="gameBoard">
+            <!-- Карточки будут сгенерированы JavaScript -->
+        </div>
+        
+        <div class="controls hidden" id="controls">
+            <button id="restartBtn">Играть снова</button>
+        </div>
+        
+        <div class="leaderboard">
+            <h3>🏆 Топ 10 игроков</h3>
+            <ul class="leaderboard-list" id="leaderboardList">
+                <!-- Рейтинг будет сгенерирован JavaScript -->
+            </ul>
+            <div class="player-input">
+                <input type="text" id="playerName" placeholder="Введите ваше имя">
+                <button id="saveScoreBtn">Сохранить результат</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="congrats hidden" id="congratsModal">
+        <div class="congrats-content">
+            <h2>🎉 Поздравляем!</h2>
+            <p>Вы нашли все пары за <span id="finalTime">0.0</span> секунд!</p>
+            <button id="closeCongratsBtn">Продолжить</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Элементы DOM
+            const startScreen = document.getElementById('startScreen');
+            const statsPanel = document.getElementById('statsPanel');
+            const gameBoard = document.getElementById('gameBoard');
+            const controls = document.getElementById('controls');
+            const timerElement = document.getElementById('timer');
+            const pairsElement = document.getElementById('pairs');
+            const startBtn = document.getElementById('startBtn');
+            const restartBtn = document.getElementById('restartBtn');
+            const congratsModal = document.getElementById('congratsModal');
+            const finalTimeElement = document.getElementById('finalTime');
+            const closeCongratsBtn = document.getElementById('closeCongratsBtn');
+            const leaderboardList = document.getElementById('leaderboardList');
+            const playerNameInput = document.getElementById('playerName');
+            const saveScoreBtn = document.getElementById('saveScoreBtn');
+            
+            // Данные игры
+            const figures = [
+                { id: 'duck', name: 'Утка', emoji: '🦆', color: '#FFD700' },
+                { id: 'plane', name: 'Самолет', emoji: '✈️', color: '#008000' },
+                { id: 'heart', name: 'Сердце', emoji: '❤️', color: '#FF0000' },
+                { id: 'tree', name: 'Дерево', emoji: '🎄', color: '#00AA00' },
+                { id: 'robot', name: 'Робот', emoji: '🤖', color: '#0000FF' }
+            ];
+            
+            // Рейтинг игроков
+            let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [
+                { name: "Алексей", time: 12.5 },
+                { name: "Мария", time: 15.2 },
+                { name: "Иван", time: 16.8 },
+                { name: "Елена", time: 17.3 },
+                { name: "Дмитрий", time: 18.1 },
+                { name: "Ольга", time: 19.5 },
+                { name: "Сергей", time: 20.2 },
+                { name: "Наталья", time: 21.7 },
+                { name: "Андрей", time: 22.4 },
+                { name: "Ксения", time: 23.9 }
+            ];
+            
+            let cards = [];
+            let flippedCards = [];
+            let matchedPairs = 0;
+            let timer = 0;
+            let timerInterval;
+            let isGameOver = false;
+            let gameStarted = false;
+            
+            // Инициализация игры
+            function initGame() {
+                // Показать игровое поле, скрыть стартовый экран
+                startScreen.classList.add('hidden');
+                statsPanel.classList.remove('hidden');
+                gameBoard.classList.remove('hidden');
+                controls.classList.remove('hidden');
+                
+                // Очистка игрового поля
+                gameBoard.innerHTML = '';
+                flippedCards = [];
+                matchedPairs = 0;
+                timer = 0;
+                timerElement.textContent = timer.toFixed(1);
+                pairsElement.textContent = matchedPairs;
+                isGameOver = false;
+                gameStarted = false;
+                
+                // Создание пар карточек
+                const gameFigures = [...figures, ...figures];
+                
+                // Перемешивание карточек
+                for (let i = gameFigures.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [gameFigures[i], gameFigures[j]] = [gameFigures[j], gameFigures[i]];
+                }
+                
+                // Создание карточек
+                gameFigures.forEach((figure, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.dataset.index = index;
+                    card.dataset.value = figure.id;
+                    
+                    card.innerHTML = `
+                        <div class="front">?</div>
+                        <div class="back" style="color: ${figure.color};">${figure.emoji}</div>
+                    `;
+                    
+                    card.addEventListener('click', () => flipCard(card));
+                    gameBoard.appendChild(card);
+                });
+                
+                // Обновить рейтинг
+                renderLeaderboard();
+            }
+            
+            // Функция переворота карточки
+            function flipCard(card) {
+                // Начать игру при первом клике
+                if (!gameStarted) {
+                    gameStarted = true;
+                    startTimer();
+                }
+                
+                // Проверка, можно ли перевернуть карточку
+                if (flippedCards.length >= 2 || 
+                    card.classList.contains('flipped') || 
+                    card.classList.contains('matched')) {
+                    return;
+                }
+                
+                // Переворот карточки
+                card.classList.add('flipped');
+                flippedCards.push(card);
+                
+                // Проверка пары
+                if (flippedCards.length === 2) {
+                    const [firstCard, secondCard] = flippedCards;
+                    
+                    if (firstCard.dataset.value === secondCard.dataset.value) {
+                        // Найдена пара
+                        setTimeout(() => {
+                            firstCard.classList.add('matched');
+                            secondCard.classList.add('matched');
+                            flippedCards = [];
+                            matchedPairs++;
+                            pairsElement.textContent = matchedPairs;
+                            
+                            // Проверка окончания игры
+                            if (matchedPairs === figures.length) {
+                                endGame();
+                            }
+                        }, 500);
+                    } else {
+                        // Не пара - переворот обратно
+                        setTimeout(() => {
+                            firstCard.classList.remove('flipped');
+                            secondCard.classList.remove('flipped');
+                            flippedCards = [];
+                        }, 1000);
+                    }
+                }
+            }
+            
+            // Запуск таймера
+            function startTimer() {
+                if (timerInterval) clearInterval(timerInterval);
+                
+                timerInterval = setInterval(() => {
+                    if (!isGameOver) {
+                        timer += 0.1;
+                        timerElement.textContent = timer.toFixed(1);
+                    }
+                }, 100);
+            }
+            
+            // Завершение игры
+            function endGame() {
+                isGameOver = true;
+                clearInterval(timerInterval);
+                finalTimeElement.textContent = timer.toFixed(1);
+                congratsModal.classList.remove('hidden');
+            }
+            
+            // Закрытие модального окна
+            closeCongratsBtn.addEventListener('click', () => {
+                congratsModal.classList.add('hidden');
+            });
+            
+            // Перезапуск игры
+            restartBtn.addEventListener('click', initGame);
+            startBtn.addEventListener('click', initGame);
+            
+            // Сохранение результата
+            saveScoreBtn.addEventListener('click', () => {
+                const playerName = playerNameInput.value.trim();
+                if (playerName && timer > 0) {
+                    leaderboard.push({ name: playerName, time: timer });
+                    leaderboard.sort((a, b) => a.time - b.time);
+                    leaderboard = leaderboard.slice(0, 10);
+                    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+                    renderLeaderboard();
+                    playerNameInput.value = '';
+                }
+            });
+            
+            // Отображение рейтинга
+            function renderLeaderboard() {
+                leaderboardList.innerHTML = '';
+                
+                leaderboard.forEach((player, index) => {
+                    const li = document.createElement('li');
+                    if (index < 3) {
+                        li.classList.add('top-three');
+                    }
+                    
+                    li.innerHTML = `
+                        <span>
+                            ${index < 3 ? '<span class="trophy">🏆</span>' : (index + 1) + '.'} 
+                            ${player.name}
+                        </span>
+                        <span>${player.time.toFixed(1)} сек.</span>
+                    `;
+                    
+                    leaderboardList.appendChild(li);
+                });
+            }
+            
+            // Начальная инициализация
+            renderLeaderboard();
+        });
+    </script>
+</body>
+</html>
+
