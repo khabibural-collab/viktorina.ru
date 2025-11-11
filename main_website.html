@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 BrainSpace Конструктор | Полный Сайт</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        /* NAVIGATION */
+        nav {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .nav-logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            background: white;
+            color: #667eea;
+        }
+        
+        /* MAIN CONTENT */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* HOME SECTION */
+        .home {
+            text-align: center;
+            color: white;
+        }
+        
+        .home h1 {
+            font-size: 56px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .home p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .home-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .home-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .home-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .home-card-emoji {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+        
+        .home-card-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .home-card-desc {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* QUIZ SECTION */
+        .quiz-container {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        
+        .quiz-header {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .quiz-header h2 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        /* IDEAS SECTION */
+        .ideas-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+        
+        .ideas-header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .ideas-header p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+        
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .category-btn {
+            background: white;
+            border: none;
+            border-radius: 20px;
+            padding: 40px 30px;
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            min-height: 200px;
+        }
+        
+        .category-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .category-emoji {
+            font-size: 60px;
+        }
+        
+        .category-text {
+            color: #333;
+            font-size: 20px;
+        }
+        
+        .btn-transport { background: linear-gradient(135deg, #FF6B6B 0%, #FF8E72 100%); }
+        .btn-transport .category-text { color: white; }
+        
+        .btn-buildings { background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%); }
+        .btn-buildings .category-text { color: white; }
+        
+        .btn-robots { background: linear-gradient(135deg, #FFD43B 0%, #FFA940 100%); }
+        .btn-robots .category-text { color: #333; }
+        
+        .btn-animals { background: linear-gradient(135deg, #95E1D3 0%, #F38181 100%); }
+        .btn-animals .category-text { color: white; }
+        
+        .btn-fantasy { background: linear-gradient(135deg, #A8EDEA 0%, #FED6E3 100%); }
+        .btn-fantasy .category-text { color: #333; }
+        
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            animation: fadeIn 0.3s;
+        }
+        
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 25px;
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            animation: slideIn 0.3s;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 40px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.2s;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+        }
+        
+        .idea-emoji {
+            font-size: 80px;
+            margin: 20px 0;
+        }
+        
+        .idea-text {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0;
+            line-height: 1.4;
+        }
+        
+        .idea-description {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        .action-btn.close {
+            background: #999;
+        }
+        
+        @media (max-width: 768px) {
+            .home h1 { font-size: 40px; }
+            .ideas-header h1 { font-size: 36px; }
+            .categories { grid-template-columns: 1fr; }
+            .modal-content { padding: 30px 20px; width: 95%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="nav-container">
+            <div class="nav-logo" onclick="showSection('home')">🎮 BrainSpace</div>
+            <div class="nav-links">
+                <button class="nav-link active" onclick="showSection('home')">Главная</button>
+                <button class="nav-link" onclick="showSection('quiz')">Викторина</button>
+                <button class="nav-link" onclick="showSection('ideas')">Генератор идей</button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- MAIN -->
+    <div class="main">
+        <!-- HOME SECTION -->
+        <div class="section active" id="home">
+            <div class="home">
+                <h1>🎮 Добро пожаловать в BrainSpace!</h1>
+                <p>Собирай конструктор, учись, играй и выигрывай!</p>
+                
+                <div class="home-buttons">
+                    <div class="home-card" onclick="showSection('quiz')">
+                        <div class="home-card-emoji">🎯</div>
+                        <div class="home-card-title">Викторина</div>
+                        <div class="home-card-desc">Отвечай на вопросы и зарабатывай баллы!</div>
+                    </div>
+                    
+                    <div class="home-card" onclick="showSection('ideas')">
+                        <div class="home-card-emoji">💡</div>
+                        <div class="home-card-title">Генератор идей</div>
+                        <div class="home-card-desc">Получи случайную идею для сборки!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- QUIZ SECTION -->
+        <div class="section" id="quiz">
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <h2>🎮 Конструктор Баллов</h2>
+                    <p>Ответ на вопрос - получай баллы!</p>
+                </div>
+                
+                <iframe 
+                    src="data:text/html;charset=utf-8,%3C%21DOCTYPE%20html%3E%3Chtml%20lang%3D%22ru%22%3E%3Chead%3E%3Cmeta%20charset%3D%22UTF-8%22%3E%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%2C%20initial-scale%3D1.0%22%3E%3Ctitle%3EВикторина%3C%2Ftitle%3E%3Cstyle%3E%2A%20%7B%20margin%3A%200%3B%20padding%3A%200%3B%20box-sizing%3A%20border-box%3B%20%7D%20body%20%7B%20font-family%3A%20Arial%3B%20background%3A%20%23f5f5f5%3B%20padding%3A%2020px%3B%20%7D%20.welcome%20%7B%20text-align%3A%20center%3B%20%7D%20.title%20%7B%20font-size%3A%2036px%3B%20color%3A%20%23667eea%3B%20margin%3A%2020px%200%3B%20%7D%20.input-name%20%7B%20width%3A%20100%25%3B%20padding%3A%2015px%3B%20font-size%3A%2016px%3B%20border%3A%202px%20solid%20%23667eea%3B%20border-radius%3A%2010px%3B%20margin%3A%2020px%200%3B%20%7D%20.start-btn%20%7B%20background%3A%20%23667eea%3B%20color%3A%20white%3B%20border%3A%20none%3B%20padding%3A%2015px%2040px%3B%20font-size%3A%2016px%3B%20border-radius%3A%2010px%3B%20cursor%3A%20pointer%3B%20%7D%3C%2Fstyle%3E%3C%2Fhead%3E%3Cbody%3E%3Cdiv%20class%3D%22welcome%22%3E%3Cdiv%20class%3D%22title%22%3EВикторина%3C%2Fdiv%3E%3Cinput%20type%3D%22text%22%20class%3D%22input-name%22%20placeholder%3D%22Введи%20имя%22%3E%3Cbutton%20class%3D%22start-btn%22%3EЗагрузка...%3C%2Fbutton%3E%3C%2Fdiv%3E%3C%2Fbody%3E%3C%2Fhtml%3E"
+                    style="width: 100%; height: 600px; border: none; border-radius: 12px;"
+                ></iframe>
+            </div>
+        </div>
+        
+        <!-- IDEAS SECTION -->
+        <div class="section" id="ideas">
+            <div class="ideas-header">
+                <h1>💡 Генератор Идей</h1>
+                <p>Выбери категорию и получи случайную идею!</p>
+            </div>
+            
+            <div class="categories">
+                <button class="category-btn btn-transport" onclick="openIdea('transport')">
+                    <div class="category-emoji">🚗</div>
+                    <div class="category-text">Транспорт</div>
+                </button>
+                
+                <button class="category-btn btn-buildings" onclick="openIdea('buildings')">
+                    <div class="category-emoji">🏗️</div>
+                    <div class="category-text">Строения</div>
+                </button>
+                
+                <button class="category-btn btn-robots" onclick="openIdea('robots')">
+                    <div class="category-emoji">🤖</div>
+                    <div class="category-text">Роботы</div>
+                </button>
+                
+                <button class="category-btn btn-animals" onclick="openIdea('animals')">
+                    <div class="category-emoji">🐾</div>
+                    <div class="category-text">Животные</div>
+                </button>
+                
+                <button class="category-btn btn-fantasy" onclick="openIdea('fantasy')">
+                    <div class="category-emoji">🎡</div>
+                    <div class="category-text">Фантазия</div>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL -->
+    <div id="ideaModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">💡 Идея</div>
+                <button class="close-btn" onclick="closeIdea()">×</button>
+            </div>
+            
+            <div class="idea-emoji" id="ideaEmoji">🎮</div>
+            <div class="idea-text" id="ideaText">Случайная идея</div>
+            <div class="idea-description" id="ideaDescription">Описание</div>
+            
+            <div class="button-group">
+                <button class="action-btn" onclick="nextIdea()">🎲 Ещё идея!</button>
+                <button class="action-btn close" onclick="closeIdea()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // NAVIGATION
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // IDEAS
+        const ideas = {
+            transport: [
+                { emoji: '🚗', name: 'Машина мечты', desc: 'С четырьмя колёсами и крышей' },
+                { emoji: '🏎️', name: 'Гоночный болид', desc: 'Быстрая и аэродинамичная' },
+                { emoji: '🚓', name: 'Полицейская машина', desc: 'С проблесковыми огнями' },
+                { emoji: '✈️', name: 'Самолёт', desc: 'С двумя крыльями' },
+                { emoji: '🚁', name: 'Вертолёт', desc: 'С вращающимися лопастями' },
+                { emoji: '🚀', name: 'Космическая ракета', desc: 'Готовится к взлёту' },
+                { emoji: '🚂', name: 'Паровоз', desc: 'С вагончиком' },
+                { emoji: '🚚', name: 'Грузовик', desc: 'Для доставки деталей' },
+                { emoji: '🚌', name: 'Автобус', desc: 'С пассажирами' },
+                { emoji: '⛵', name: 'Лодка', desc: 'Или катер' }
+            ],
+            buildings: [
+                { emoji: '🏰', name: 'Башня инженеров', desc: 'Высокая и прочная' },
+                { emoji: '🏗️', name: 'Кран', desc: 'С поднимающейся стрелой' },
+                { emoji: '🌉', name: 'Мост', desc: 'Через реку' },
+                { emoji: '🏠', name: 'Дом', desc: 'На двух этажах' },
+                { emoji: '💨', name: 'Ветряная мельница', desc: 'Можно крутить' },
+                { emoji: '🌾', name: 'Ферма', desc: 'С забором' },
+                { emoji: '🛸', name: 'Космическая станция', desc: 'Научное учреждение' },
+                { emoji: '🏛️', name: 'Арка или ворота', desc: 'Красивые и симметричные' },
+                { emoji: '⚔️', name: 'Катапульта', desc: 'Запускает шарик' },
+                { emoji: '🔥', name: 'Пожарная вышка', desc: 'С лестницей' }
+            ],
+            robots: [
+                { emoji: '🤖', name: 'Робот', desc: 'С подвижными руками' },
+                { emoji: '🐕', name: 'Робот-собака', desc: 'Трансформер' },
+                { emoji: '🧹', name: 'Робот-пылесос', desc: 'С колёсами и щёткой' },
+                { emoji: '⚙️', name: 'Механизм', desc: 'С вращающимися шестерёнками' },
+                { emoji: '⬆️', name: 'Мини-лифт', desc: 'Поднимает кубик' },
+                { emoji: '💨', name: 'Вентилятор', desc: 'С пропеллером' },
+                { emoji: '⏰', name: 'Часы', desc: 'С вращающимися стрелками' },
+                { emoji: '👋', name: 'Машущий робот', desc: 'Помахивает рукой' },
+                { emoji: '🔧', name: 'Рычажный подъемник', desc: 'Поднимает предметы' },
+                { emoji: '📦', name: 'Мини-конвейер', desc: 'Движущаяся лента' }
+            ],
+            animals: [
+                { emoji: '🦕', name: 'Динозавр', desc: 'С длинной шеей' },
+                { emoji: '🐠', name: 'Рыба', desc: 'С подвижным хвостом' },
+                { emoji: '🦅', name: 'Птица', desc: 'С крыльями' },
+                { emoji: '🕷️', name: 'Паук', desc: 'На восьми ногах' },
+                { emoji: '🐘', name: 'Слон', desc: 'С хоботом' },
+                { emoji: '🐶', name: 'Собака', desc: 'Верный друг' },
+                { emoji: '🐱', name: 'Кот', desc: 'Мягкий и пушистый' },
+                { emoji: '🦋', name: 'Бабочка', desc: 'С симметричными крыльями' },
+                { emoji: '🐢', name: 'Черепаха', desc: 'С панцирем' },
+                { emoji: '🐛', name: 'Жук', desc: 'С антеннами' },
+                { emoji: '🐍', name: 'Змейка', desc: 'Которая гнётся' }
+            ],
+            fantasy: [
+                { emoji: '🎡', name: 'Карусель', desc: 'Весёлое развлечение' },
+                { emoji: '🚀', name: 'Ракета', desc: 'И стартовая площадка' },
+                { emoji: '🧩', name: 'Лабиринт', desc: 'Для катящегося шарика' },
+                { emoji: '🏹', name: 'Танк', desc: 'Армейская техника' },
+                { emoji: '🛒', name: 'Тележка', desc: 'Для перевозки грузов' },
+                { emoji: '🏰', name: 'Замок', desc: 'С башнями' },
+                { emoji: '🛸', name: 'Космический корабль', desc: 'Инопланетян' },
+                { emoji: '🦾', name: 'Механическая рука', desc: 'Подвижная' },
+                { emoji: '🚁', name: 'Летающий дрон', desc: 'Из воображения' }
+            ]
+        };
+        
+        let currentCategory = '';
+        let categoryEmojis = {
+            transport: '🚗',
+            buildings: '🏗️',
+            robots: '🤖',
+            animals: '🐾',
+            fantasy: '🎡'
+        };
+        
+        let categoryNames = {
+            transport: 'Транспорт',
+            buildings: 'Строения',
+            robots: 'Роботы',
+            animals: 'Животные',
+            fantasy: 'Фантазия'
+        };
+        
+        function getRandomIdea() {
+            const categoryIdeas = ideas[currentCategory];
+            const randomIndex = Math.floor(Math.random() * categoryIdeas.length);
+            return categoryIdeas[randomIndex];
+        }
+        
+        function openIdea(category) {
+            currentCategory = category;
+            showIdea();
+            document.getElementById('ideaModal').classList.add('show');
+        }
+        
+        function showIdea() {
+            const idea = getRandomIdea();
+            document.getElementById('modalTitle').textContent = categoryEmojis[currentCategory] + ' ' + categoryNames[currentCategory];
+            document.getElementById('ideaEmoji').textContent = idea.emoji;
+            document.getElementById('ideaText').textContent = idea.name;
+            document.getElementById('ideaDescription').textContent = idea.desc;
+        }
+        
+        function nextIdea() {
+            showIdea();
+        }
+        
+        function closeIdea() {
+            document.getElementById('ideaModal').classList.remove('show');
+        }
+        
+        window.onclick = function(event) {
+            const modal = document.getElementById('ideaModal');
+            if (event.target === modal) {
+                modal.classList.remove('show');
+            }
+        }
+    </script>
+</body>
+</html>
